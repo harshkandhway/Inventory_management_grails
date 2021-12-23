@@ -2,15 +2,14 @@
 <html>
 <head>
 <link rel="stylesheet" href="${resource(dir: 'css', file: 'bootstrap.min.css')}" type="text/css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
 <title>Insert title here</title>
 </head>
 <body>
 <g:render template="navBar"/>
 <br/><br/>
   <div class="container">
-  <g:render template="newForm"/>
-  <br/><br/>
-  <table class="table table-striped">
+  <table class="table table-striped" id="customerDataTable">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -18,24 +17,27 @@
       <th scope="col">First</th>
       <th scope="col">Last</th>
       <th scope="col">Phone</th>
+      <th scope="col">Delete</th>
     </tr>
   </thead>
-  <tbody>
-  <g:each in="${customerInstanceList}" var="thisCustomer">
+  <%-- <tbody>
+  <g:each in="${customerInstanceList}" var="thisCustomer" id="gEachInTable">
     <tr>
-      <th scope="row">${thisCustomer.id}</th>
+      <th scope="row"> <a href="/${grailsApplication.metadata['app.name']}/customer/update?id=${thisCustomer.id}">${thisCustomer.id}</a></th>
       <td>${thisCustomer.email}</td>
       <td>${thisCustomer.firstName}</td>
       <td>${thisCustomer.lastName}</td>
       <td>${thisCustomer.phone}</td>
+      <td><button type="button" id="deleteCustomerBtn" data-cust-id="${thisCustomer.id}" class="btn btn-danger">Delete</button></td>
     </tr>
     </g:each>
-  </tbody>
+  </tbody> --%> 
 </table>
   </div>
   
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <g:javascript src = "customer.js"></g:javascript>
 </html>
 

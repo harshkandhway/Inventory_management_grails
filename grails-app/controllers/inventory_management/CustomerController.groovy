@@ -4,9 +4,38 @@ import grails.converters.JSON
 
 class CustomerController {
 	def index = {
-		def customerInstance = Customer.list()
-		println customerInstance
-				render(view: "index", model: [customerInstanceList: customerInstance])
+//		def customerInstance = Customer.list()
+//		println customerInstance
+//				render(view: "index", model: [customerInstanceList: customerInstance])
+		
+	}
+	
+	def getData = {
+		List<Object> data = new ArrayList()
+		List<Customer> customer = Customer.list();
+		if(customer) {
+			customer.each {
+				data << [
+					it?.id,
+					it?.email,
+					it?.firstName,
+					it?.lastName,
+					it?.phone,
+					'<button type="button" id="deleteCustomerBtn" data-cust-id="'+it?.id+'" class="btn btn-danger">Delete</button>'
+				]
+			}
+		}
+		
+		HashMap<String, List<Object>> jsonData = ["aaData": data]
+		render jsonData as JSON
+	}
+	
+	def update = {
+		 def customer = null
+		 if(params.id) {
+		 customer = Customer.get(params.id?.toString()?.toLong())
+		 }
+		 render(view: "create", model: [customer: customer])
 	}
 	
 	def create = {
@@ -14,7 +43,7 @@ class CustomerController {
 			String msg = ""
 			def point = 0
 			println "params are:" + params
-			def customer = Customer.findByEmail(params.inputEmail1)
+			def customer = Customer.get(params.customerId?.toString()?.toLong())
 			
 			if(!customer){
 				customer = new Customer()
@@ -38,5 +67,18 @@ class CustomerController {
 		}
 	}
 
-    
+    def deleteCustomer = {
+		try{
+			String msg = 'failed'
+			def custIns = Customer.get(params.custId.toString().toLong())
+			if(custIns){
+				custIns.delete(flush: true)
+				msg = "success"
+			}
+			println "msg is :"+msg
+			render msg
+		} catch(Exception e){
+			println "error in deleteCustomer is :"+e
+		}
+	}
 }

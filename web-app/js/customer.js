@@ -1,4 +1,57 @@
-$(document).ready(function(){
+var dataTableCustomer;
+function loadCustomerTable() {
+//	alert();
+//	if ($.fn.dataTable.isDataTable('#customerDataTable')) 
+//		dataTableCustomer.destroy();
+		
+//	alert($.fn.dataTable.isDataTable('#customerDataTable'));
+	dataTableCustomer = $('#customerDataTable').DataTable({
+		"ajax" : {
+		"url": "/Inventory_Management/customer/getData",
+		"type" : "POST"
+		},
+//		"bDestroy": true,
+		"bSort": false,
+		"processing": true
+		});
+	
+	
+//	$.ajax({
+//		url: "/Inventory_Management/customer/getData",
+//		type: 'GET',
+//		success: function(data){
+//			$("#gEachInTable").attr('in',data);
+//			console.log(data);
+//		}
+//	});
+}
+
+$('document').ready(function(){
+//	dataTableCustomer = $('#customerDataTable').DataTable();
+	loadCustomerTable();
+	
+	$(document).on('click', '#deleteCustomerBtn', function() {
+		var custId = $("#deleteCustomerBtn").attr('data-cust-id');
+		console.log(custId);
+		$.ajax({
+			url: "/Inventory_Management/customer/deleteCustomer",
+			type: 'POST',
+			data: {custId : custId},
+			success: function(msg){
+				if(msg == 'success') {
+		    		alert("Successfully Deleted!!");
+		    		dataTableCustomer.ajax.reload();
+//		    		loadCustomerTable();
+//		    		window.location.reload();
+	    		} else alert("Failed!!!")
+	    	}
+		});
+	});
+	
+//	$('#deleteCustomerBtn').click(function(e) {
+//		e.preventDefault();
+//		
+//	)};
     $('#customerForm').on('submit', function(e){
     	if(!e.isDefaultPrevented()){
 	    	e.preventDefault();
@@ -13,6 +66,7 @@ $(document).ready(function(){
 	    		success: function(msg){
 	    		if(msg == 'success') {
 		    		alert("Successfully Save!!");
+		    		dataTableCustomer.ajax.reload();
 //		    		window.location.href = "/"+ appDefaults.appName + "/customer/index";
 		    		window.location.reload();
 	    		}
